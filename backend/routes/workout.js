@@ -1,5 +1,5 @@
 // In this file, there will be routes for different user interaction using API.
-
+const Workout = require("../models/workoutModel");
 const express = require("express");
 const router = express.Router();
 
@@ -14,8 +14,16 @@ router.get("/:id", (req, res) => {
 });
 
 // Post a new workout
-router.post("/", (req, res) => {
-  res.json({ msg: "POST a new workout" });
+router.post("/", async (req, res) => {
+  const { title, load, reps } = req.body;
+
+  try {
+    const workout = await Workout.create({ title, load, reps });
+    console.log(workout);
+    res.status(200).json({ workout });
+  } catch (error) {
+    res.status(400).json({ error: error.msg });
+  }
 });
 
 // Delete a workout
